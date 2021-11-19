@@ -27,7 +27,7 @@
         flex: 1;
         align-items: center;
         justify-content: center;
-        height: 400px;
+        height: 600px;
         width: 100vw;
         /* background-color: darkseagreen; */
         margin: 20px;
@@ -35,26 +35,29 @@
       .task-div {
         display: flex;
         flex-direction: column;
+        align-items: center;
+        justify-content: center;
         background-color: powderblue;
-        height: 400px;
-        width: 400px;
+        height: 500px;
+        width: 500px;
         margin: 10px;
       }
       .form-item {
-        margin: 20px;
+        margin: 40px;
+        width: 400px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
       }
-      form p {
+      p {
         margin: 0;
         color: red;
       }
       input {
         width: 200px;
-        height: 35px;
-        margin: 10px;
+        height: 40px;
+        margin: 20px;
       }
       button {
         border: 1px solid gray;
@@ -100,7 +103,13 @@
             placeholder="First Name"
             required
           />
-          <p id="fname_error" style="visibility: hidden">First Name Required</p>
+          <p
+            id="fname_error"
+            class="invalid-feedback"
+            style="visibility: hidden"
+          >
+            First Name Required
+          </p>
           <input
             type="text"
             class="form-control"
@@ -108,7 +117,13 @@
             placeholder="Last Name"
             required
           />
-          <p id="lname_error" style="visibility: hidden">Last Name Required</p>
+          <p
+            id="lname_error"
+            class="invalid-feedback"
+            style="visibility: hidden"
+          >
+            Last Name Required
+          </p>
           <input
             type="email"
             class="form-control"
@@ -116,7 +131,13 @@
             placeholder="Email ID"
             required
           />
-          <p id="email_error" style="visibility: hidden">Mail ID Required</p>
+          <p
+            id="email_error"
+            class="invalid-feedback"
+            style="visibility: hidden"
+          >
+            Mail ID Required
+          </p>
           <input
             type="password"
             class="form-control"
@@ -124,12 +145,14 @@
             placeholder="Password"
             required
           />
-          <p id="pwd_error" style="visibility: hidden">Password Required</p>
+          <p id="pwd_error" class="invalid-feedback" style="visibility: hidden">
+            Password Required
+          </p>
           <div class="btn-div">
-            <button type="reset" class="btn-primary" id="reset-btn">
+            <button type="reset" class="btn-close-white" id="reset-btn">
               Reset
             </button>
-            <button type="button" class="btn-primary" id="sign-btn">
+            <button type="button" class="btn-close-white" id="sign-btn">
               Sign-Up
             </button>
           </div>
@@ -212,6 +235,7 @@
         if (fn.value == "") {
           fn.classList.add("is-invalid");
           document.getElementById("fname_error").style.visibility = "visible";
+          document.getElementById("fn").style.marginBottom = 0;
         } else {
           fn.classList.add("is-valid");
           fn.classList.remove("is-invalid");
@@ -222,6 +246,7 @@
         if (ln.value == "") {
           ln.classList.add("is-invalid");
           document.getElementById("lname_error").style.visibility = "visible";
+          document.getElementById("ln").style.marginBottom = 0;
         } else {
           ln.classList.add("is-valid");
           ln.classList.remove("is-invalid");
@@ -232,6 +257,7 @@
         if (mail.value == "") {
           mail.classList.add("is-invalid");
           document.getElementById("email_error").style.visibility = "visible";
+          document.getElementById("email").style.marginBottom = 0;
         } else {
           mail.classList.add("is-valid");
           mail.classList.remove("is-invalid");
@@ -242,6 +268,7 @@
         if (pword.value == "") {
           pword.classList.add("is-invalid");
           document.getElementById("pwd_error").style.visibility = "visible";
+          document.getElementById("pwd").style.marginBottom = 0;
         } else {
           pword.classList.add("is-valid");
           pword.classList.remove("is-invalid");

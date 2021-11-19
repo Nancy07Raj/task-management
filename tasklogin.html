@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sign-Up</title>
+    <title>Login</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -34,8 +34,9 @@
       }
       .task-div {
         display: flex;
-
-        background-color: powderblue;
+        align-items: center;
+        justify-content: center;
+        background-color: #96c7c1;
         height: 400px;
         width: 400px;
         margin: 10px;
@@ -46,11 +47,13 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        width: 100%;
+        margin: 20px;
       }
       input {
         width: 300px;
         height: 35px;
-        margin: 15px 10px 0;
+        margin: 35px 10px 0;
         border: 1px solid gray;
       }
       button {
@@ -68,9 +71,7 @@
         display: flex;
         align-items: center;
         justify-content: flex-start;
-      }
-      .wrong {
-        border-color: red;
+        margin: 20px;
       }
       p {
         margin: 0;
@@ -94,26 +95,38 @@
       </ul>
     </nav>
     <div class="content">
-      <div class="task-div">
+      <div class="container task-div">
         <form id="form" class="form-item">
-          <input type="email" id="email" placeholder="Email ID" />
-          <p id="mail" style="visibility: hidden">
+          <input
+            class="form-control"
+            type="email"
+            id="email"
+            placeholder="Email ID"
+          />
+          <p id="mail" style="visibility: hidden" class="invalid-feedback">
             Please entre valid Email ID
           </p>
-          <input type="password" id="pwd" placeholder="Password" />
-          <p id="pword" style="visibility: hidden">
+          <input
+            class="form-control"
+            type="password"
+            id="pwd"
+            placeholder="Password"
+          />
+          <p id="pword" style="visibility: hidden" class="invalid-feedback">
             Please entre valid Password
           </p>
           <div class="btn-div">
-            <button type="reset">Reset</button>
-            <button type="button" id="login">Login</button>
+            <button class="btn-close-white" type="reset">Reset</button>
+            <button class="btn-close-white" type="button" id="login">
+              Login
+            </button>
           </div>
         </form>
       </div>
     </div>
     <script>
       let login = document.getElementById("login");
-      login.addEventListener("click", loginfun);
+      login.addEventListener("click", loginfun, true);
       let emaill = document.getElementById("email");
       let pwdd = document.getElementById("pwd");
       emaill.addEventListener("blur", validate_email);
@@ -123,9 +136,13 @@
         let pwd = document.getElementById("pwd").value.trim();
         if (email == "") {
           alert("Enter Your Mail ID");
+          document.getElementById("email").focus();
+          return false;
         }
         if (pwd == "") {
           alert("Enter Your Password");
+          document.getElementById("pwd").focus();
+          return false;
         }
 
         let config = {
@@ -164,22 +181,22 @@
 
       function validate_email() {
         if (document.getElementById("email").value == "") {
-          document.getElementById("email").classList.add("wrong");
+          document.getElementById("email").classList.add("is-invalid");
           document.getElementById("mail").style.visibility = "visible";
-          document.getElementById("mail").style.color = "red";
         } else {
           document.getElementById("mail").style.visibility = "hidden";
-          document.getElementById("email").classList.remove("wrong");
+          document.getElementById("email").classList.remove("is-invalid");
+          document.getElementById("email").classList.add("is-valid");
         }
       }
       function validate_pwd() {
         if (document.getElementById("pwd").value == "") {
-          document.getElementById("pwd").classList.add("wrong");
+          document.getElementById("pwd").classList.add("is-invalid");
           document.getElementById("pword").style.visibility = "visible";
-          document.getElementById("pword").style.color = "red";
         } else {
           document.getElementById("pword").style.visibility = "hidden";
-          document.getElementById("pwd").classList.remove("wrong");
+          document.getElementById("pwd").classList.remove("is-invalid");
+          document.getElementById("pwd").classList.add("is-valid");
         }
       }
     </script>
