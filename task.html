@@ -68,7 +68,7 @@
         width: 600px;
       }
       .wrong {
-        border-color: red;
+        border-color: #ff0000;
       }
     </style>
   </head>
@@ -90,10 +90,7 @@
           <a href="./tasksheduling.html" class="nav-link">Task Schedule</a>
         </li>
         <li class="nav-item nav-space">
-          <a
-            href="./tasklogin.html"
-            onclick="removeUserInfo();"
-            class="nav-link"
+          <a href="./index.html" onclick="removeUserInfo();" class="nav-link"
             >Logout</a
           >
         </li>
@@ -107,7 +104,12 @@
           id="title"
           placeholder="Title"
           class="form-control"
+          required
         />
+        <p id="title_error" style="visibility: hidden" class="invalid-feedback">
+          Title is required field
+        </p>
+
         <label for="des" class="form-label">Description</label>
         <textarea
           class="form-control"
@@ -117,16 +119,34 @@
           placeholder="Description"
         >
         </textarea>
+        <p id="des_error" style="visibility: hidden" class="invalid-feedback">
+          Description is required field
+        </p>
         <div class="row1">
           <div class="div2">
             <label for="duedate" class="form-label">Due Date</label>
             <input type="date" id="duedate" />
+            <p
+              id="due_error"
+              style="visibility: hidden"
+              class="invalid-feedback"
+            >
+              DueDate is required field
+            </p>
             <label for="priority" class="form-label">Priority</label>
             <select class="form-select" name="priority" id="priority">
+              <option value="" disabled selected hidden>Priority</option>
               <option value="1">High</option>
               <option value="2">Medium</option>
               <option value="3">Low</option>
             </select>
+            <p
+              id="prior_error"
+              style="visibility: hidden"
+              class="invalid-feedback"
+            >
+              Priority is required field
+            </p>
           </div>
           <div class="div2">
             <div class="row2">
@@ -162,47 +182,55 @@
                 <label class="form-check-label" for="type3"> Bug</label>
               </div>
             </div>
-
-            <label class="form-check-label">Label</label>
-            <div class="form-check">
-              <input
-                id="ch1"
-                type="checkbox"
-                class="form-check-input checkbox"
-                name="label[]"
-                value="1"
-              />
-              <label class="form-check-label">Feature</label>
-            </div>
-            <div class="form-check">
-              <input
-                id="ch2"
-                type="checkbox"
-                class="form-check-input checkbox"
-                name="label[]"
-                value="2"
-              />
-              <label class="form-check-label">Front-End</label>
-            </div>
-            <div class="form-check">
-              <input
-                id="ch3"
-                type="checkbox"
-                class="form-check-input checkbox"
-                name="label[]"
-                value="3"
-              />
-              <label class="form-check-label">Change Request</label>
-            </div>
-            <div class="form-check">
-              <input
-                id="ch4"
-                type="checkbox"
-                class="form-check-input checkbox"
-                name="label[]"
-                value="4"
-              />
-              <label class="form-check-label">Back-End</label>
+            <div id="box">
+              <label class="form-check-label">Label</label>
+              <div class="form-check">
+                <input
+                  id="ch1"
+                  type="checkbox"
+                  class="form-check-input checkbox"
+                  name="label[]"
+                  value="1"
+                />
+                <label class="form-check-label">Feature</label>
+              </div>
+              <div class="form-check">
+                <input
+                  id="ch2"
+                  type="checkbox"
+                  class="form-check-input checkbox"
+                  name="label[]"
+                  value="2"
+                />
+                <label class="form-check-label">Front-End</label>
+              </div>
+              <div class="form-check">
+                <input
+                  id="ch3"
+                  type="checkbox"
+                  class="form-check-input checkbox"
+                  name="label[]"
+                  value="3"
+                />
+                <label class="form-check-label">Change Request</label>
+              </div>
+              <div class="form-check">
+                <input
+                  id="ch4"
+                  type="checkbox"
+                  class="form-check-input checkbox"
+                  name="label[]"
+                  value="4"
+                />
+                <label class="form-check-label">Back-End</label>
+              </div>
+              <p
+                id="label_error"
+                style="visibility: hidden"
+                class="invalid-feedback"
+              >
+                Min 1 Label is required
+              </p>
             </div>
           </div>
         </div>
@@ -262,18 +290,15 @@
 
       let save = document.getElementById("save");
 
-      save.addEventListener("click", savefun);
+      save.addEventListener("click", savefun, true);
 
       function savefun() {
         let title = document.getElementById("title").value;
         let des = document.getElementById("des").value;
         let due = document.getElementById("duedate").value;
         let priority = document.getElementById("priority").value;
-        let type = document.querySelector('input[name="type"]:checked').value;
+        let type = document.querySelector('input[name="type"]:checked');
         let Id = localStorage.getItem("Id");
-
-        // let accessToken =
-        // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoiNjE4YjcwYjQzODYxYTYwMDE3ZTU5MTRkIiwiZGF0YSI6eyJlbWFpbCI6ImZhdGhpQGdtYWlsLmNvbSJ9LCJpYXQiOjE2MzY1NjA4OTgsImV4cCI6MTYzOTE1Mjg5OH0.GIIVQEhsaLrZYIE3k3_iG-XbNt24IIJYotD1FIT-xO8";
 
         let checkedvalue = [];
         let label = null;
@@ -286,6 +311,44 @@
           }
         }
 
+        if (title == "") {
+          alert("Enter Title");
+          document.getElementById("title").focus();
+          return false;
+        }
+        if (des == "") {
+          alert("Enter Description");
+          document.getElementById("des").focus();
+          return false;
+        }
+        if (due == "") {
+          alert("Enter DueDate");
+          document.getElementById("duedate").focus();
+          return false;
+        }
+        if (priority == "") {
+          alert("Select Priority");
+          document.getElementById("priority").focus();
+          return false;
+        }
+
+        if (checkedvalue == "") {
+          alert("Select Label");
+          return false;
+        }
+        if (type == null) {
+          alert("Enter Type");
+          return false;
+        }
+
+        let d = new Date();
+        check_date =
+          d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+        if (due < check_date) {
+          alert("DueDate must be greater than Today");
+          return false;
+        }
+
         if (Id == null) {
           let config = {
             method: "POST",
@@ -295,7 +358,7 @@
               dueDate: due,
               label: checkedvalue,
               priority: priority,
-              type: type,
+              type: type.value,
             }),
             headers: {
               "Content-type": "application/json",
@@ -311,10 +374,12 @@
             .then((data) => {
               console.log(data);
               document.getElementById("form").reset();
+              remove_valid_class();
               setTimeout(alert("Task Created"), 1000);
             })
             .catch((e) => alert(e.message));
         } else {
+          console.log(check_date);
           let config_put = {
             method: "PUT",
             body: JSON.stringify({
@@ -322,7 +387,7 @@
               description: des,
               dueDate: due,
               priority: priority,
-              type: type,
+              type: type.value,
               label: checkedvalue,
               status: 1,
             }),
@@ -338,9 +403,11 @@
           )
             .then((res) => res.json())
             .then((data) => {
+              setTimeout(alert("Task Updated"), 1000);
               console.log(data);
               removels();
               document.getElementById("form").reset();
+              remove_valid_class();
             });
         }
       }
@@ -350,6 +417,71 @@
         localStorage.removeItem("firstName");
         localStorage.removeItem("lastName");
         localStorage.removeItem("userId");
+      }
+
+      let tit = document.getElementById("title");
+      let desc = document.getElementById("des");
+      let dueD = document.getElementById("duedate");
+      let prior = document.getElementById("priority");
+
+      let cboxs = document.getElementsByName("label[]");
+      var chbox = 0;
+      for (i = 0; i < 4; i++) {
+        if (cboxs[i].checked) {
+          chbox += 1;
+        }
+      }
+
+      tit.addEventListener("blur", valid_title);
+      desc.addEventListener("blur", valid_des);
+      prior.addEventListener("blur", valid_prior);
+      dueD.addEventListener("blur", valid_due);
+
+      function valid_title() {
+        if (title.value.trim() == "") {
+          tit.classList.add("is-invalid");
+          document.getElementById("title_error").style.visibility = "visible";
+        } else {
+          tit.classList.add("is-valid");
+          tit.classList.remove("is-invalid");
+          document.getElementById("title_error").style.visibility = "hidden";
+        }
+      }
+      function valid_des() {
+        if (desc.value.trim() == "") {
+          desc.classList.add("is-invalid");
+          document.getElementById("des_error").style.visibility = "visible";
+        } else {
+          desc.classList.add("is-valid");
+          desc.classList.remove("is-invalid");
+          document.getElementById("des_error").style.visibility = "hidden";
+        }
+      }
+      function valid_prior() {
+        if (prior.value == "") {
+          prior.classList.add("is-invalid");
+          document.getElementById("prior_error").style.visibility = "visible";
+        } else {
+          prior.classList.add("is-valid");
+          prior.classList.remove("is-invalid");
+          document.getElementById("prior_error").style.visibility = "hidden";
+        }
+      }
+      function valid_due() {
+        if (dueD.value == "") {
+          dueD.classList.add("is-invalid");
+          document.getElementById("due_error").style.visibility = "visible";
+        } else {
+          dueD.classList.add("is-valid");
+          dueD.classList.remove("is-invalid");
+          document.getElementById("due_error").style.visibility = "hidden";
+        }
+      }
+      function remove_valid_class() {
+        dueD.classList.remove("is-valid");
+        prior.classList.remove("is-valid");
+        desc.classList.remove("is-valid");
+        tit.classList.remove("is-valid");
       }
     </script>
   </body>

@@ -50,7 +50,8 @@
       input {
         width: 300px;
         height: 35px;
-        margin: 15px 10px;
+        margin: 15px 10px 0;
+        border: 1px solid gray;
       }
       button {
         border: 1px solid gray;
@@ -67,6 +68,12 @@
         display: flex;
         align-items: center;
         justify-content: flex-start;
+      }
+      .wrong {
+        border-color: red;
+      }
+      p {
+        margin: 0;
       }
     </style>
   </head>
@@ -90,7 +97,13 @@
       <div class="task-div">
         <form id="form" class="form-item">
           <input type="email" id="email" placeholder="Email ID" />
+          <p id="mail" style="visibility: hidden">
+            Please entre valid Email ID
+          </p>
           <input type="password" id="pwd" placeholder="Password" />
+          <p id="pword" style="visibility: hidden">
+            Please entre valid Password
+          </p>
           <div class="btn-div">
             <button type="reset">Reset</button>
             <button type="button" id="login">Login</button>
@@ -101,10 +114,20 @@
     <script>
       let login = document.getElementById("login");
       login.addEventListener("click", loginfun);
-
+      let emaill = document.getElementById("email");
+      let pwdd = document.getElementById("pwd");
+      emaill.addEventListener("blur", validate_email);
+      pwdd.addEventListener("blur", validate_pwd);
       function loginfun() {
-        let email = document.getElementById("email").value;
-        let pwd = document.getElementById("pwd").value;
+        let email = document.getElementById("email").value.trim();
+        let pwd = document.getElementById("pwd").value.trim();
+        if (email == "") {
+          alert("Enter Your Mail ID");
+        }
+        if (pwd == "") {
+          alert("Enter Your Password");
+        }
+
         let config = {
           method: "POST",
           body: JSON.stringify({
@@ -137,6 +160,27 @@
       function checkUser() {
         if (localStorage.getItem("accessToken") !== null)
           location.replace("./task.html");
+      }
+
+      function validate_email() {
+        if (document.getElementById("email").value == "") {
+          document.getElementById("email").classList.add("wrong");
+          document.getElementById("mail").style.visibility = "visible";
+          document.getElementById("mail").style.color = "red";
+        } else {
+          document.getElementById("mail").style.visibility = "hidden";
+          document.getElementById("email").classList.remove("wrong");
+        }
+      }
+      function validate_pwd() {
+        if (document.getElementById("pwd").value == "") {
+          document.getElementById("pwd").classList.add("wrong");
+          document.getElementById("pword").style.visibility = "visible";
+          document.getElementById("pword").style.color = "red";
+        } else {
+          document.getElementById("pword").style.visibility = "hidden";
+          document.getElementById("pwd").classList.remove("wrong");
+        }
       }
     </script>
   </body>

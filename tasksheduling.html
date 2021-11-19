@@ -53,10 +53,7 @@
           <a href="#" class="nav-link">Task Schedule</a>
         </li>
         <li class="nav-item nav-space">
-          <a
-            href="./taskindex.html"
-            onclick="removeUserInfo();"
-            class="nav-link"
+          <a href="./index.html" onclick="removeUserInfo();" class="nav-link"
             >Logout</a
           >
         </li>
@@ -176,8 +173,14 @@
             if (output.data[j].label[k] == 4) cell[4].innerHTML += " Back-End";
           }
           let dt = new Date(output.data[j].dueDate);
-          cell[5].innerHTML =
-            dt.getMonth() + 1 + "/" + dt.getDate() + "/" + dt.getFullYear();
+
+          deadLine =
+            dt.getFullYear() +
+            "-" +
+            (dt.getMonth() + 1) +
+            "-" +
+            (dt.getDate() + 1);
+          cell[5].innerHTML = deadLine;
           cell[6].innerHTML = `<button class="btn" id="edt-btn" onclick= "edt('${taskId[j]}');" data-id="${taskId[j]}" type="button">Edit</button>`;
           cell[7].innerHTML = `<button class="btn" id="del-btn"  onclick="dele('${taskId[j]}');" type="button">Delete</button>`;
         }
