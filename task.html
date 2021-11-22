@@ -67,9 +67,6 @@
         justify-content: left;
         width: 600px;
       }
-      .wrong {
-        border-color: #ff0000;
-      }
     </style>
   </head>
   <body onload="lstorage();">
@@ -106,9 +103,7 @@
           class="form-control"
           required
         />
-        <p id="title_error" style="visibility: hidden" class="invalid-feedback">
-          Title is required field
-        </p>
+        <p id="titleError" class="invalid-feedback">Title is required field</p>
 
         <label for="des" class="form-label">Description</label>
         <textarea
@@ -119,19 +114,15 @@
           placeholder="Description"
         >
         </textarea>
-        <p id="des_error" style="visibility: hidden" class="invalid-feedback">
+        <p id="desError" class="invalid-feedback">
           Description is required field
         </p>
         <div class="row1">
           <div class="div2">
             <label for="duedate" class="form-label">Due Date</label>
-            <input type="date" id="duedate" />
-            <p
-              id="due_error"
-              style="visibility: hidden"
-              class="invalid-feedback"
-            >
-              DueDate is required field
+            <input type="date" id="dueDate" />
+            <p id="dueError" class="invalid-feedback">
+              DueDate is required field and must be greater than today
             </p>
             <label for="priority" class="form-label">Priority</label>
             <select class="form-select" name="priority" id="priority">
@@ -140,16 +131,12 @@
               <option value="2">Medium</option>
               <option value="3">Low</option>
             </select>
-            <p
-              id="prior_error"
-              style="visibility: hidden"
-              class="invalid-feedback"
-            >
+            <p id="priorError" class="invalid-feedback">
               Priority is required field
             </p>
           </div>
           <div class="div2">
-            <div class="row2">
+            <div class="row2" id="type">
               <label class="form-check-label">Type</label>
               <div class="form-check row1">
                 <input
@@ -182,6 +169,7 @@
                 <label class="form-check-label" for="type3"> Bug</label>
               </div>
             </div>
+            <p id="typeError" class="invalid-feedback">Select Type</p>
             <div id="box">
               <label class="form-check-label">Label</label>
               <div class="form-check">
@@ -224,14 +212,10 @@
                 />
                 <label class="form-check-label">Back-End</label>
               </div>
-              <p
-                id="label_error"
-                style="visibility: hidden"
-                class="invalid-feedback"
-              >
-                Min 1 Label is required
-              </p>
             </div>
+            <p id="labelError" class="invalid-feedback">
+              Min one Label is required
+            </p>
           </div>
         </div>
         <div id="btn">
@@ -256,7 +240,7 @@
               (today.getMonth() + 1) +
               "-" +
               today.getDate();
-            document.getElementById("duedate").value = formattedtoday;
+            document.getElementById("dueDate").value = formattedtoday;
 
             document.getElementById("priority").value =
               localStorage.getItem("priority");
@@ -291,124 +275,176 @@
       let save = document.getElementById("save");
 
       save.addEventListener("click", savefun, true);
+      let title = document.getElementById("title");
+      let des = document.getElementById("des");
+      let due = document.getElementById("dueDate");
+      let priority = document.getElementById("priority");
+      let label = document.getElementsByName("label[]");
+      let labelDiv = document.getElementById("box");
+      let typeDiv = document.getElementById("type");
 
-      function savefun() {
-        let title = document.getElementById("title").value;
-        let des = document.getElementById("des").value;
-        let due = document.getElementById("duedate").value;
-        let priority = document.getElementById("priority").value;
-        let type = document.querySelector('input[name="type"]:checked');
-        let Id = localStorage.getItem("Id");
+      let titleError = document.getElementById("titleError");
+      let desError = document.getElementById("desError");
+      let dueError = document.getElementById("dueError");
+      let priorError = document.getElementById("priorError");
+      let labelError = document.getElementById("labelError");
+      let typeError = document.getElementById("typeError");
 
-        let checkedvalue = [];
-        let label = null;
-        let cbox = document.getElementsByName("label[]");
-        let k = 0;
-        for (var i = 0; i < 4; i++) {
-          if (cbox[i].checked) {
-            checkedvalue[k] = cbox[i].value;
-            k++;
-          }
-        }
+      title.addEventListener("blur", validateTitle);
+      des.addEventListener("blur", validateDes);
+      due.addEventListener("blur", validateDue);
+      priority.addEventListener("blur", validatePrior);
+      labelDiv.addEventListener("click", validateLabel);
 
-        if (title == "") {
-          alert("Enter Title");
-          document.getElementById("title").focus();
+      function validateTitle() {
+        if (title.value.trim() == "") {
+          error(title, titleError);
           return false;
+        } else {
+          valid(title, titleError);
+          return true;
         }
-        if (des == "") {
-          alert("Enter Description");
-          document.getElementById("des").focus();
-          return false;
-        }
-        if (due == "") {
-          alert("Enter DueDate");
-          document.getElementById("duedate").focus();
-          return false;
-        }
-        if (priority == "") {
-          alert("Select Priority");
-          document.getElementById("priority").focus();
-          return false;
-        }
+      }
 
-        if (checkedvalue == "") {
-          alert("Select Label");
+      function validateDes() {
+        if (des.value.trim() == "") {
+          error(des, desError);
           return false;
+        } else {
+          valid(des, desError);
+          return true;
         }
-        if (type == null) {
-          alert("Enter Type");
-          return false;
-        }
+      }
 
+      function validateDue() {
         let d = new Date();
         check_date =
           d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
-        if (due < check_date) {
-          alert("DueDate must be greater than Today");
+        if (due.value == "" || due.value < check_date) {
+          error(due, dueError);
+          return false;
+        } else {
+          valid(due, dueError);
+          return true;
+        }
+      }
+
+      function validatePrior() {
+        if (priority.value == "") {
+          error(priority, priorError);
+          return false;
+        } else {
+          valid(priority, priorError);
+          return true;
+        }
+      }
+      function validateLabel() {
+        let count = 0;
+        for (var i = 0; i < 4; i++) {
+          if (label[i].checked) {
+            count = 1;
+          }
+        }
+        if (count == 0) {
+          labelError.style.visibility = "visible";
+          alert("Select Atleast one Label for Task");
+          return false;
+        } else {
+          labelError.style.visibility = "hidden";
+          return true;
+        }
+      }
+      function validateType() {
+        let type = document.querySelector('input[name="type"]:checked');
+        try {
+          if (type.value == null) {
+            typeError.style.visibility = "visible";
+          } else typeError.style.visibility = "hidden";
+        } catch {
+          typeError.style.visibility = "visible";
+          alert("Select Task Type");
           return false;
         }
+      }
 
-        if (Id == null) {
-          let config = {
-            method: "POST",
-            body: JSON.stringify({
-              title: title,
-              description: des,
-              dueDate: due,
-              label: checkedvalue,
-              priority: priority,
-              type: type.value,
-            }),
-            headers: {
-              "Content-type": "application/json",
-              Authorization: localStorage.getItem("accessToken"),
-            },
+      function savefun() {
+        let type = document.querySelector('input[name="type"]:checked');
+        let Id = localStorage.getItem("Id");
+        let checkedValue = [];
+        let count = 0;
+        let k = 0;
+        for (var i = 0; i < 4; i++) {
+          if (label[i].checked) {
+            checkedValue[k] = label[i].value;
+            count = 1;
+            k++;
+          }
+        }
+        validateTitle();
+        validateDes();
+        validateDue();
+        validatePrior();
+        validateType();
+        validateLabel();
+        if (
+          validateTitle() == true &&
+          validateDes() == true &&
+          validateDue() == true &&
+          validatePrior() == true
+        ) {
+          let jsonBody = {
+            title: title.value,
+            description: des.value,
+            dueDate: due.value,
+            label: checkedValue,
+            priority: priority.value,
+            type: type.value,
           };
+          if (Id == null) {
+            let config = {
+              method: "POST",
+              body: JSON.stringify(jsonBody),
+              headers: {
+                "Content-type": "application/json",
+                Authorization: localStorage.getItem("accessToken"),
+              },
+            };
 
-          fetch(
-            "https://task-management-rest-app.herokuapp.com/api/tasks",
-            config
-          )
-            .then((res) => res.json())
-            .then((data) => {
-              console.log(data);
-              document.getElementById("form").reset();
-              remove_valid_class();
-              setTimeout(alert("Task Created"), 1000);
-            })
-            .catch((e) => alert(e.message));
-        } else {
-          console.log(check_date);
-          let config_put = {
-            method: "PUT",
-            body: JSON.stringify({
-              title: title,
-              description: des,
-              dueDate: due,
-              priority: priority,
-              type: type.value,
-              label: checkedvalue,
-              status: 1,
-            }),
-            headers: {
-              "Content-type": "application/json",
-              Authorization: localStorage.getItem("accessToken"),
-            },
-          };
+            fetch(
+              "https://task-management-rest-app.herokuapp.com/api/tasks",
+              config
+            )
+              .then((res) => res.json())
+              .then((data) => {
+                console.log(data);
+                document.getElementById("form").reset();
+                remove_valid_class();
+                setTimeout(alert("Task Created"), 1000);
+              })
+              .catch((e) => alert(e.message));
+          } else {
+            let configPut = {
+              method: "PUT",
+              body: JSON.stringify(jsonBody),
+              headers: {
+                "Content-type": "application/json",
+                Authorization: localStorage.getItem("accessToken"),
+              },
+            };
 
-          fetch(
-            `https://task-management-rest-app.herokuapp.com/api/tasks/${Id}`,
-            config_put
-          )
-            .then((res) => res.json())
-            .then((data) => {
-              setTimeout(alert("Task Updated"), 1000);
-              console.log(data);
-              removels();
-              document.getElementById("form").reset();
-              remove_valid_class();
-            });
+            fetch(
+              `https://task-management-rest-app.herokuapp.com/api/tasks/${Id}`,
+              configPut
+            )
+              .then((res) => res.json())
+              .then((data) => {
+                setTimeout(alert("Task Updated"), 1000);
+                console.log(data);
+                removels();
+                document.getElementById("form").reset();
+                remove_valid_class();
+              });
+          }
         }
       }
       function removeUserInfo() {
@@ -419,69 +455,20 @@
         localStorage.removeItem("userId");
       }
 
-      let tit = document.getElementById("title");
-      let desc = document.getElementById("des");
-      let dueD = document.getElementById("duedate");
-      let prior = document.getElementById("priority");
-
-      let cboxs = document.getElementsByName("label[]");
-      var chbox = 0;
-      for (i = 0; i < 4; i++) {
-        if (cboxs[i].checked) {
-          chbox += 1;
-        }
+      function error(field, para) {
+        field.classList.add("is-invalid");
+        para.style.visibility = "visible";
       }
-
-      tit.addEventListener("blur", valid_title);
-      desc.addEventListener("blur", valid_des);
-      prior.addEventListener("blur", valid_prior);
-      dueD.addEventListener("blur", valid_due);
-
-      function valid_title() {
-        if (title.value.trim() == "") {
-          tit.classList.add("is-invalid");
-          document.getElementById("title_error").style.visibility = "visible";
-        } else {
-          tit.classList.add("is-valid");
-          tit.classList.remove("is-invalid");
-          document.getElementById("title_error").style.visibility = "hidden";
-        }
-      }
-      function valid_des() {
-        if (desc.value.trim() == "") {
-          desc.classList.add("is-invalid");
-          document.getElementById("des_error").style.visibility = "visible";
-        } else {
-          desc.classList.add("is-valid");
-          desc.classList.remove("is-invalid");
-          document.getElementById("des_error").style.visibility = "hidden";
-        }
-      }
-      function valid_prior() {
-        if (prior.value == "") {
-          prior.classList.add("is-invalid");
-          document.getElementById("prior_error").style.visibility = "visible";
-        } else {
-          prior.classList.add("is-valid");
-          prior.classList.remove("is-invalid");
-          document.getElementById("prior_error").style.visibility = "hidden";
-        }
-      }
-      function valid_due() {
-        if (dueD.value == "") {
-          dueD.classList.add("is-invalid");
-          document.getElementById("due_error").style.visibility = "visible";
-        } else {
-          dueD.classList.add("is-valid");
-          dueD.classList.remove("is-invalid");
-          document.getElementById("due_error").style.visibility = "hidden";
-        }
+      function valid(field, para) {
+        field.classList.remove("is-invalid");
+        field.classList.add("is-valid");
+        para.style.visibility = "hidden";
       }
       function remove_valid_class() {
-        dueD.classList.remove("is-valid");
-        prior.classList.remove("is-valid");
-        desc.classList.remove("is-valid");
-        tit.classList.remove("is-valid");
+        title.classList.remove("is-valid");
+        des.classList.remove("is-valid");
+        due.classList.remove("is-valid");
+        priority.classList.remove("is-valid");
       }
     </script>
   </body>

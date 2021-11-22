@@ -104,7 +104,7 @@
             required
           />
           <p
-            id="fname_error"
+            id="fnameError"
             class="invalid-feedback"
             style="visibility: hidden"
           >
@@ -118,7 +118,7 @@
             required
           />
           <p
-            id="lname_error"
+            id="lnameError"
             class="invalid-feedback"
             style="visibility: hidden"
           >
@@ -132,11 +132,11 @@
             required
           />
           <p
-            id="email_error"
+            id="emailError"
             class="invalid-feedback"
             style="visibility: hidden"
           >
-            Mail ID Required
+            Mail ID Required in Correct Mail Format
           </p>
           <input
             type="password"
@@ -145,14 +145,14 @@
             placeholder="Password"
             required
           />
-          <p id="pwd_error" class="invalid-feedback" style="visibility: hidden">
+          <p id="pwdError" class="invalid-feedback" style="visibility: hidden">
             Password Required
           </p>
           <div class="btn-div">
-            <button type="reset" class="btn-close-white" id="reset-btn">
+            <button type="reset" class="btn-close-white" id="resetBtn">
               Reset
             </button>
-            <button type="button" class="btn-close-white" id="sign-btn">
+            <button type="button" class="btn-close-white" id="signBtn">
               Sign-Up
             </button>
           </div>
@@ -161,119 +161,112 @@
     </div>
 
     <script>
-      let reset = document.getElementById("reset-btn");
-      let signup = document.getElementById("sign-btn");
+      let reset = document.getElementById("resetBtn");
+      let signUp = document.getElementById("signBtn");
 
-      let fn = document.getElementById("fn");
-      let ln = document.getElementById("ln");
-      let mail = document.getElementById("email");
-      let pword = document.getElementById("pwd");
+      let fname = document.getElementById("fn");
+      let lname = document.getElementById("ln");
+      let email = document.getElementById("email");
+      let pwd = document.getElementById("pwd");
+      let fnameError = document.getElementById("fnameError");
+      let lnameError = document.getElementById("lnameError");
+      let emailError = document.getElementById("emailError");
+      let pwdError = document.getElementById("pwdError");
 
-      fn.addEventListener("blur", valid_fname);
-      ln.addEventListener("blur", valid_lname);
-      mail.addEventListener("blur", valid_email);
-      pword.addEventListener("blur", valid_pwd);
+      var mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-      signup.addEventListener("click", signupfun, true);
+      fname.addEventListener("blur", validateFname);
+      lname.addEventListener("blur", validateLname);
+      email.addEventListener("blur", validateEmail);
+      pwd.addEventListener("blur", validatePwd);
+      signUp.addEventListener("click", signUpFunction);
 
-      function signupfun() {
-        let fname = document.getElementById("fn").value;
-        let lname = document.getElementById("ln").value;
-        let email = document.getElementById("email").value;
-        let pwd = document.getElementById("pwd").value;
-
-        if (fname == "") {
-          alert("Enter First Name");
-          document.getElementById("fn").focus();
-          return false;
-        }
-        if (lname == "") {
-          alert("Enter Last Name");
-          document.getElementById("ln").focus();
-          return false;
-        }
-        if (email == "") {
-          alert("Enter Email ID");
-          document.getElementById("email").focus();
-          return false;
-        }
-        if (pwd == "") {
-          alert("Enter Password");
-          document.getElementById("pwd").focus();
-          return false;
-        }
-
-        let config = {
-          method: "POST",
-          body: JSON.stringify({
-            email: email,
-            password: pwd,
-            firstName: fname,
-            lastName: lname,
-          }),
-          headers: {
-            "Content-type": "application/json",
-          },
-        };
-
-        fetch(
-          "https://task-management-rest-app.herokuapp.com/api/users",
-          config
-        )
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-            location.replace("./tasklogin.html");
-            document.getElementById("form").reset();
-          })
-          .catch((e) => console.log(e.message));
-
-        document.getElementById("form").reset();
-      }
-
-      function valid_fname() {
+      function validateFname() {
         if (fn.value == "") {
-          fn.classList.add("is-invalid");
-          document.getElementById("fname_error").style.visibility = "visible";
-          document.getElementById("fn").style.marginBottom = 0;
+          error(fname, fnameError);
+          return false;
         } else {
-          fn.classList.add("is-valid");
-          fn.classList.remove("is-invalid");
-          document.getElementById("fname_error").style.visibility = "hidden";
+          valid(fname, fnameError);
+          return true;
         }
       }
-      function valid_lname() {
-        if (ln.value == "") {
-          ln.classList.add("is-invalid");
-          document.getElementById("lname_error").style.visibility = "visible";
-          document.getElementById("ln").style.marginBottom = 0;
+      function validateLname() {
+        if (lname.value == "") {
+          error(lname, lnameError);
+          return false;
         } else {
-          ln.classList.add("is-valid");
-          ln.classList.remove("is-invalid");
-          document.getElementById("lname_error").style.visibility = "hidden";
+          valid(lname, lnameError);
+          return true;
         }
       }
-      function valid_email() {
-        if (mail.value == "") {
-          mail.classList.add("is-invalid");
-          document.getElementById("email_error").style.visibility = "visible";
-          document.getElementById("email").style.marginBottom = 0;
+      function validateEmail() {
+        if (email.value == "" || !email.value.match(mailFormat)) {
+          error(email, emailError);
+          return false;
         } else {
-          mail.classList.add("is-valid");
-          mail.classList.remove("is-invalid");
-          document.getElementById("email_error").style.visibility = "hidden";
+          valid(email, emailError);
+          return true;
         }
       }
-      function valid_pwd() {
-        if (pword.value == "") {
-          pword.classList.add("is-invalid");
-          document.getElementById("pwd_error").style.visibility = "visible";
-          document.getElementById("pwd").style.marginBottom = 0;
+      function validatePwd() {
+        if (pwd.value == "") {
+          error(pwd, pwdError);
+          return false;
         } else {
-          pword.classList.add("is-valid");
-          pword.classList.remove("is-invalid");
-          document.getElementById("pwd_error").style.visibility = "hidden";
+          valid(pwd, pwdError);
+          return true;
         }
+      }
+
+      function signUpFunction() {
+        validateEmail();
+        validateFname();
+        validateLname();
+        validatePwd();
+        if (
+          validateEmail() == true &&
+          validateFname() == true &&
+          validateLname() == true &&
+          validatePwd() == true
+        ) {
+          let config = {
+            method: "POST",
+            body: JSON.stringify({
+              email: email.value,
+              password: pwd.value,
+              firstName: fname.value,
+              lastName: lname.value,
+            }),
+            headers: {
+              "Content-type": "application/json",
+            },
+          };
+
+          fetch(
+            "https://task-management-rest-app.herokuapp.com/api/users",
+            config
+          )
+            .then((res) => res.json())
+            .then((data) => {
+              console.log(data);
+              location.replace("./tasklogin.html");
+              document.getElementById("form").reset();
+            })
+            .catch((e) => console.log(e.message));
+
+          document.getElementById("form").reset();
+        }
+      }
+
+      function error(field, para) {
+        field.classList.add("is-invalid");
+        para.style.visibility = "visible";
+        field.value = "";
+      }
+      function valid(field, para) {
+        field.classList.add("is-valid");
+        field.classList.remove("is-invalid");
+        para.style.visibility = "hidden";
       }
     </script>
   </body>
