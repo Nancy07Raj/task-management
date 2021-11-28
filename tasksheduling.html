@@ -199,14 +199,26 @@
             if (output.data[j].label[k] == 4) cell[4].innerHTML += "Back-End";
           }
           let dt = new Date(output.data[j].dueDate);
+          let tt = new Date();
+          if (dt.getDate() < 10)
+            deadLine =
+              dt.getFullYear() +
+              "-" +
+              (dt.getMonth() + 1) +
+              "-" +
+              "0" +
+              (dt.getDate() + 1);
+          else
+            deadLine =
+              dt.getFullYear() +
+              "-" +
+              (dt.getMonth() + 1) +
+              "-" +
+              (dt.getDate() + 1);
+          if (dt.getTime() < tt.getTime())
+            cell[5].innerHTML = `<span style="color:#F90716">${deadLine} *</span>`;
+          else cell[5].innerHTML = deadLine;
 
-          deadLine =
-            dt.getFullYear() +
-            "-" +
-            (dt.getMonth() + 1) +
-            "-" +
-            (dt.getDate() + 1);
-          cell[5].innerHTML = deadLine;
           cell[6].innerHTML = `<button class="btn" id="edt-btn" onclick= "edt('${taskId[j]}');" data-id="${taskId[j]}" type="button">Edit</button>`;
           cell[7].innerHTML = `<button class="btn" id="del-btn"  onclick="dele('${taskId[j]}');" type="button">Delete</button>`;
         }

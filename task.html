@@ -252,13 +252,23 @@
               localStorage.getItem("title");
             document.getElementById("des").value = localStorage.getItem("des");
             var today = new Date(localStorage.getItem("due"));
-
-            var formattedtoday =
-              today.getFullYear() +
-              "-" +
-              (today.getMonth() + 1) +
-              "-" +
-              today.getDate();
+            if (today.getDate() < 10)
+              var formattedtoday =
+                today.getFullYear() +
+                "-" +
+                (today.getMonth() + 1) +
+                "-" +
+                "0" +
+                today.getDate() +
+                1;
+            else
+              var formattedtoday =
+                today.getFullYear() +
+                "-" +
+                (today.getMonth() + 1) +
+                "-" +
+                today.getDate() +
+                1;
             document.getElementById("dueDate").value = formattedtoday;
 
             document.getElementById("priority").value =
