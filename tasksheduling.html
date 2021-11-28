@@ -13,6 +13,7 @@
     <style>
       body {
         margin: 0;
+        position: relative;
       }
 
       .nav-space {
@@ -26,12 +27,22 @@
         margin: 10px 20px;
         max-height: 100%;
         max-width: 100%;
-        /* background-color: darkseagreen; */
       }
 
       button:hover {
         border-color: darkblue;
         color: darkblue;
+      }
+      #userInfo {
+        position: absolute;
+        right: 5px;
+        font-size: 17px;
+        font-weight: 400;
+        justify-content: right;
+      }
+      .display {
+        border: 2px solid;
+        padding: 5px;
       }
     </style>
   </head>
@@ -58,6 +69,7 @@
           >
         </li>
       </ul>
+      <span class="navbar-brand" id="userInfo"></span>
     </nav>
 
     <div class="container-fluid">
@@ -76,6 +88,11 @@
     </div>
 
     <script>
+      let userName = localStorage.getItem("firstName");
+      let userEmail = localStorage.getItem("email");
+      let userInfo = document.getElementById("userInfo");
+      userInfo.innerHTML = `Hello ${userName} (${userEmail})`;
+
       let config = {
         method: "GET",
         headers: {
@@ -154,21 +171,32 @@
           cell[0].innerHTML = output.data[j].title;
           cell[1].innerHTML = output.data[j].description;
           for (k = 0; k < 3; k++) {
-            if (output.data[j].type == 1) cell[2].innerHTML = "Task";
-            if (output.data[j].type == 2) cell[2].innerHTML = "Story";
-            if (output.data[j].type == 3) cell[2].innerHTML = "Bug";
+            if (output.data[j].type == 1)
+              cell[2].innerHTML = `<span class="display" style="border-color:#142F43">Task</span>`;
+            if (output.data[j].type == 2)
+              cell[2].innerHTML =
+                '<span class="display" style="border-color:#533535">Story</span>';
+            if (output.data[j].type == 3)
+              cell[2].innerHTML =
+                '<span class="display" style="border-color:#B91646">Bug</span>';
           }
           for (k = 0; k < 3; k++) {
-            if (output.data[j].priority == 1) cell[3].innerHTML = "High";
-            if (output.data[j].priority == 2) cell[3].innerHTML = "Medium";
-            if (output.data[j].priority == 3) cell[3].innerHTML = "Low";
+            if (output.data[j].priority == 1)
+              cell[3].innerHTML =
+                '<span class="display" style="border-color:#E02401">High</span>';
+            if (output.data[j].priority == 2)
+              cell[3].innerHTML =
+                '<span class="display" style="border-color:#FF9300">Medium</span>';
+            if (output.data[j].priority == 3)
+              cell[3].innerHTML =
+                '<span class="display" style="border-color:#6B4F4F">Low</span>';
           }
           for (k = 0; k < 4; k++) {
-            if (output.data[j].label[k] == 1) cell[4].innerHTML += " Feature";
-            if (output.data[j].label[k] == 2) cell[4].innerHTML += " Front-End";
+            if (output.data[j].label[k] == 1) cell[4].innerHTML += "Feature";
+            if (output.data[j].label[k] == 2) cell[4].innerHTML += "Front-End";
             if (output.data[j].label[k] == 3)
-              cell[4].innerHTML += " Change Request";
-            if (output.data[j].label[k] == 4) cell[4].innerHTML += " Back-End";
+              cell[4].innerHTML += "Change Request";
+            if (output.data[j].label[k] == 4) cell[4].innerHTML += "Back-End";
           }
           let dt = new Date(output.data[j].dueDate);
 

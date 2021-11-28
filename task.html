@@ -13,6 +13,7 @@
     <style>
       body {
         margin: 0;
+        position: relative;
       }
 
       .nav-space {
@@ -67,6 +68,17 @@
         justify-content: left;
         width: 600px;
       }
+      p {
+        font-size: 14px;
+        font-weight: 400;
+      }
+      #userInfo {
+        position: absolute;
+        right: 5px;
+        justify-content: right;
+        font-size: 17px;
+        font-weight: 400;
+      }
     </style>
   </head>
   <body onload="lstorage();">
@@ -92,6 +104,7 @@
           >
         </li>
       </ul>
+      <span id="userInfo" class="navbar-brand"></span>
     </nav>
     <form id="form">
       <div class="container p-5 my-5 border mt-3 form-div">
@@ -169,7 +182,9 @@
                 <label class="form-check-label" for="type3"> Bug</label>
               </div>
             </div>
-            <p id="typeError" class="invalid-feedback">Select Type</p>
+            <p id="typeError" style="visibility: hidden; color: #cd1818">
+              Select Type
+            </p>
             <div id="box">
               <label class="form-check-label">Label</label>
               <div class="form-check">
@@ -213,7 +228,7 @@
                 <label class="form-check-label">Back-End</label>
               </div>
             </div>
-            <p id="labelError" class="invalid-feedback">
+            <p id="labelError" style="visibility: hidden; color: #cd1818">
               Min one Label is required
             </p>
           </div>
@@ -226,6 +241,10 @@
     </form>
 
     <script>
+      let userName = localStorage.getItem("firstName");
+      let userEmail = localStorage.getItem("email");
+      let userInfo = document.getElementById("userInfo");
+      userInfo.innerHTML = `Hello ${userName} (${userEmail})`;
       function lstorage() {
         if (localStorage.getItem("accessToken") !== null) {
           if (localStorage.getItem("Id") !== null) {
@@ -347,10 +366,11 @@
         }
         if (count == 0) {
           labelError.style.visibility = "visible";
-          alert("Select Atleast one Label for Task");
+          // error(label,labelError)
           return false;
         } else {
           labelError.style.visibility = "hidden";
+          // valid(label,labelError)
           return true;
         }
       }
@@ -362,7 +382,6 @@
           } else typeError.style.visibility = "hidden";
         } catch {
           typeError.style.visibility = "visible";
-          alert("Select Task Type");
           return false;
         }
       }
